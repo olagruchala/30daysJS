@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'Hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+    console.log('hello...');
+
+    // Interpolated
+    console.log('hello, ma name is %s , and you?', 'Ola'); //w miejsce %s zaostaje wstawiony drugi string.
+
+    // Styled
+    console.log('%c A great text', 'font-size: 25px; background: red'); //%c mówi żeby zastosować style z drugiego argumentu console.log
+
+    // warning!
+    console.warn('oh, nooooo!');
+
+    // Error :|
+    console.error('Worse than oh noooo!');
+
+    // Info
+    console.info('We have something new for you.');
+
+    // Testing
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('min'), 'That is wrong!') // consola wyswietli drugi arg, jeśli test pierwszego
+    // argumentu się nie powiedzie, czyli jeśli da nam false.
+
+    // clearing
+    console.clear(); // czyści wszystkie logi
+
+    // Viewing DOM Elements
+    console.log(p);
+    console.dir(p); // w konsoli wyświetli element razem z dostępnymi właściwościami i metodami, których mozemy na nim uzyć.
+
+    // Grouping together
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`);
+      console.log(`Name of this dog is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.log(`This dog is ${dog.age * 7} real old`);
+      console.groupEnd();
+    });
+
+    // counting
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ula');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ula');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ola');
+    console.count('Ula');
+    console.count('Ola');
+    console.count('Ola');
+
+    // timing
+    console.time('fetching json');
+    fetch('https://jsonplaceholder.typicode.com/users')
+            .then(date => date.json())
+            .then(json => {
+              console.timeEnd('fetching json');
+              console.log(json);
+            })
+
+  </script>
+</body>
+</html>
