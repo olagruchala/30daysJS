@@ -58,44 +58,72 @@
   -->
   <div class="inbox">
     <div class="item">
-      <input type="checkbox">
+      <input data-index="0" type="checkbox">
       <p>This is an inbox layout.</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="1" type="checkbox">
       <p>Check one item</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="2" type="checkbox">
       <p>Hold down your Shift key</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="3" type="checkbox">
       <p>Check a lower item</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="4" type="checkbox">
       <p>Everything inbetween should also be set to checked</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="5" type="checkbox">
       <p>Try to do it without any libraries</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="6" type="checkbox">
       <p>Just regular JavaScript</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="7" type="checkbox">
       <p>Good Luck!</p>
     </div>
     <div class="item">
-      <input type="checkbox">
+      <input data-index="8" type="checkbox">
       <p>Don't forget to tweet your result!</p>
     </div>
   </div>
 
-<script>
-</script>
+  <script>
+
+    let lastChecked;
+    let withShiftChecked;
+    const inputs = document.querySelectorAll(".inbox input[type='checkbox']");
+
+    function checkHandler(event) {
+
+      if (!event.shiftKey && this.checked) {
+        lastChecked = parseInt(this.dataset.index);
+      }
+
+      if (event.shiftKey && this.checked) {
+        withShiftChecked = parseInt(this.dataset.index);
+
+        if (lastChecked < withShiftChecked) {
+          for (let i = lastChecked + 1; i < withShiftChecked; i++) {
+            inputs[i].setAttribute('checked', 'checked');
+          }
+        } else if (lastChecked > withShiftChecked) {
+          for (let i = withShiftChecked + 1; i < lastChecked; i++) {
+            inputs[i].setAttribute('checked', 'checked');
+          }
+        }
+      }
+    }
+
+    inputs.forEach(input => input.addEventListener('click', checkHandler));
+
+  </script>
 </body>
 </html>
