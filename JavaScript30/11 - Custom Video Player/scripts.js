@@ -1,60 +1,77 @@
-
 const movie = document.querySelector('video');
 
 // progress handler
+// does not work in Chrome 72 and Opera 58
 
-const progressBelt = document.querySelector('div.progress__filled');
-const progress = document.querySelector('div.progress');
-function changeProgressBar () {
-    const percent = 100 / movie.duration * movie.currentTime;
+function changeProgressBar() {
+    const progressBelt = document.querySelector('div.progress__filled');
+    const percent = 100 / this.duration * this.currentTime;
     progressBelt.style.flexBasis = percent + "%";
 }
-function moveProgressBar (movie, event) {
+
+function moveProgressBar(movie, event) {
     movie.currentTime = event.offsetX;
 }
-movie.addEventListener('timeupdate', changeProgressBar);
-progress.addEventListener('mousedown', e => moveProgressBar(movie, e));
 
+movie.addEventListener('timeupdate', changeProgressBar);
+document.querySelector('div.progress').addEventListener('click', e => moveProgressBar(movie, e));
 
 // play and pause handler
 
-const playAndPauseButton = document.querySelector("button.player__button.toggle i");
-function playHandler () {
+const playAndPauseButton = document.querySelector("button.player__button.toggle");
+
+function playHandler(movie) {
     if (movie.paused) {
-        movie.play();
-        playAndPauseButton.classList.remove("fas", "fa-play");
-        playAndPauseButton.classList.add("fas", "fa-pause");
+        movie.play()
+            .then(() => {
+                playAndPauseButton.childNodes[0].classList.remove("fas", "fa-play");
+                playAndPauseButton.childNodes[0].classList.add("fas", "fa-pause");
+            })
+            .catch(err => console.log(err))
     } else {
         movie.pause();
-        playAndPauseButton.classList.remove("fas", "fa-pause");
-        playAndPauseButton.classList.add("fas", "fa-play");
+        playAndPauseButton.childNodes[0].classList.remove("fas", "fa-pause");
+        playAndPauseButton.childNodes[0].classList.add("fas", "fa-play");
     }
 }
-playAndPauseButton.addEventListener('click', playHandler);
-movie.addEventListener('click', playHandler);
 
+playAndPauseButton.addEventListener('click', () => playHandler(movie));
+movie.addEventListener('click', () => playHandler(movie));
 
-// volume handler
+// volume and playbackRate handler
 
-function volumeHandler (event, movie) {
-    movie.volume = event.target.value;
+function handleRange(event, movie) {
+    movie[event.currentTarget.name] = event.currentTarget.value;
 }
-document.querySelector("input[name=volume]").addEventListener('change', e => volumeHandler(e, movie));
 
-
-// playbackRate handler
-
-function playbackRateHandler (event, movie) {
-    movie.playbackRate = event.target.value;
-}
-document.querySelector("input[name=playbackRate]").addEventListener('change', e => playbackRateHandler(e, movie));
-
+document.querySelectorAll('input[type=range]')
+    .forEach(el => el.addEventListener('change', e => handleRange(e, movie)));
 
 // handler for rewinding a movie
+// does not work in Chrome 72 and Opera 58
 
-function skipHandler (movie, event) {
+function skipHandler(movie, event) {
     let time = movie.currentTime;
-    movie.currentTime = time + parseInt(event.target.dataset.skip);
-};
+    let skip = parseInt(event.target.dataset.skip);
+    movie.currentTime = time + skip;
+}
+
 document.querySelectorAll('button[data-skip]')
     .forEach(el => el.addEventListener('click', e => skipHandler(movie, e)));
+
+
+function fullScreenHandler(movie) {
+    if (movie.requestFullscreen) {
+        movie.requestFullscreen();
+    } else if (movie.mozRequestFullScreen) { /* Firefox */
+        movie.mozRequestFullScreen();
+    } else if (movie.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        movie.webkitRequestFullscreen();
+    } else if (movie.msRequestFullscreen) { /* IE/Edge */
+        movie.msRequestFullscreen();
+    } else {
+        alert('Fullscreen not supported.')
+    }
+}
+
+document.querySelector('button.full').addEventListener('click', () => fullScreenHandler(movie));
