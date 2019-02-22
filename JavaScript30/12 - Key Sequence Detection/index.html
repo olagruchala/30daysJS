@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body style="background-color: #42a5f5">
+<script>
+
+  const secretword = "ola";
+
+  // // using string
+
+  // let pressedLetters = "";
+  // window.addEventListener('keyup', e => {
+  //   let key = e.key;
+  //   pressedLetters = pressedLetters.concat(key);
+  //   console.log(pressedLetters);
+  //   if (pressedLetters.includes(secretword)) {
+  //     cornify_add();
+  //     pressedLetters = '';
+  //
+  //   }
+  // });
+
+
+  // using array
+
+  const secretwordArr = secretword.split("");
+  const pressedLetters = [];
+  window.addEventListener('keyup', (e) => {
+    pressedLetters.push(e.key);
+    console.log(pressedLetters);
+
+    if (pressedLetters.length >= secretwordArr.length) {
+      console.log('WE ENTER THE LOOP');
+
+      let allCorrect = true;
+      let j = secretwordArr.length-1;
+      for (let i = pressedLetters.length-1; allCorrect && i >= 0 && j >= 0; i--, j--) {
+        console.log(pressedLetters[i] +" <-> "+ secretwordArr[j]);
+        if (pressedLetters[i] !== secretwordArr[j]) {
+          allCorrect = false;
+        }
+      }
+
+      if (allCorrect) {
+        console.log("ALL GOOD");
+        cornify_add();
+      } else {
+        console.log("ALL BAD");
+      }
+    }
+  });
+
+</script>
+</body>
+</html>
